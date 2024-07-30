@@ -4,7 +4,6 @@ class Player:
         self.strengths = []
         self.weaknesses = []
         self.set_traits()
-
     def set_traits(self):
         if self.background == "Veteran Officer":
             self.strengths = ["Leadership", "Experience"]   
