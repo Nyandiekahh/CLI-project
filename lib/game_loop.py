@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
-from player import Player  # Import the Player class
-from game_state import GameState
+from lib.player import Player  # Import the Player class
+from lib.game_state import GameState
 from events import Events
 from player_actions import PlayerActions
 from game_updates import GameUpdates

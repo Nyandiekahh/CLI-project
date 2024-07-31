@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import pygame
-from game_loop import NairobiPoliceGame
-from multiplayer import MultiplayerManager
+from lib.game_loop import NairobiPoliceGame
+from lib.multiplayer import MultiplayerManager
 
 pygame.init()
 pygame.mixer.init()
