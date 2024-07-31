@@ -1,18 +1,19 @@
-import json
-import random
+#!/usr/bin/env python3
 import pygame
-from player import Player
-from game_state import GameState
+from game_loop import NairobiPoliceGame
+from multiplayer import MultiplayerManager
 
 pygame.init()
 pygame.mixer.init()
 
-# ANSI color codes
-class Colors:
-    """
-    ANSI color codes for console output.
-    """
-    GREEN = '\033[92m'
-    RED = '\033[91m'
-    RESET = '\033[0m'
-
+if __name__ == "__main__":
+    game = NairobiPoliceGame()
+    print("Do you want to play multiplayer? (y/n)")
+    if input().lower() == 'y':
+        multiplayer = MultiplayerManager(game)
+        print("Do you want to (1) host or (2) join a game?")
+        if input() == '1':
+            multiplayer.host_game()
+        else:
+            multiplayer.join_game()
+    game.start_game()
