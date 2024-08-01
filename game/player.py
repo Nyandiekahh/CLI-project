@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 class Player:
     def __init__(self, background):
         self.background = background
@@ -10,6 +11,6 @@ class Player:
         elif background == "Community Liaison":
             self.strengths = ["High trust from citizens", "Good communication skills"]
             self.weaknesses = ["Limited combat training", "Viewed as too lenient"]
-        else:
+        else:  # Tactical Expert
             self.strengths = ["Strategic thinking", "Excellent in crisis management"]
             self.weaknesses = ["Poor interpersonal skills", "Sometimes too aggressive"]

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 class Colors:
     #ANSI color codes for terminal output.
     HEADER = '\033[95m'
@@ -28,5 +27,4 @@ class Colors:
 
     RESET = '\033[0m'
     """Reset to default"""
-
 
