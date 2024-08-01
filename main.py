@@ -14,7 +14,7 @@ def display_nairobi_police_quest():
     print("\033[0m")
     print("\nWelcome to the Nairobi Police Quest!")
     print("Press 'h' for help during the game")
-    print("Press 'q' to quit the game at any instance. \033[91m(NOTE: Your progress won't be saved)\033[0m")
+    print("\033[91mPress 'q' to quit the game at any instance\033[0m")
 
 
 if __name__ == "__main__":

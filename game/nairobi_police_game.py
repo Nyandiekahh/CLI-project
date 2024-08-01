@@ -1,5 +1,3 @@
-# nairobi_police_game.py
-
 import json
 import random
 import pygame
@@ -38,8 +36,12 @@ class NairobiPoliceGame:
             self.high_score = 0
 
     def save_high_score(self):
+        # Update the high score if the current score is higher
+        if self.game_state.score > self.high_score:
+            self.high_score = self.game_state.score
+
         data = {
-            "high_score": max(self.high_score, self.game_state.score),
+            "high_score": self.high_score,
             "score": self.game_state.score,
             "current_day": self.current_day,
             "resources": self.game_state.resources
@@ -89,6 +91,7 @@ class NairobiPoliceGame:
             if user_input == 'h':
                 Help.display_help()
             elif user_input == 'q':
+                self.end_game()  # End the game and save progress on quit
                 Quit.quit_game()
             else:
                 return user_input
@@ -308,3 +311,13 @@ class NairobiPoliceGame:
         else:
             print(f"The current high score is: {self.high_score}")
         self.save_progress()
+
+    def save_progress(self):
+        self.save_high_score()
+        data = {
+            "score": self.game_state.score,
+            "current_day": self.current_day,
+            "resources": self.game_state.resources
+        }
+        with open("db.json", "w") as f:
+            json.dump(data, f)

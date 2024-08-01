@@ -1,11 +1,1 @@
-{
-    "high_score": 10000,
-    "score": 500,
-    "current_day": 1,
-    "resources": {
-        "personnel": 100,
-        "equipment": 80,
-        "public_support": 60,
-        "morale": 70
-    }
-}
+{"score": 15, "current_day": 8, "resources": {"personnel": 83, "equipment": 42, "public_support": 100, "morale": 83}}
