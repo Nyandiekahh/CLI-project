@@ -16,6 +16,7 @@ class NairobiPoliceGame:
         self.locations = ["CBD", "Kibera", "Mathare", "Uhuru Park", "City Hall", "Nairobi Hospital"]
         self.current_day = 1
         self.max_days = 7
+        self.summary_log = []  # To store summary of player's actions and scores
         pygame.init()
         pygame.mixer.init()
         self.buzz_sound = pygame.mixer.Sound("assets/buzz-buzz-95806.mp3")
@@ -103,7 +104,7 @@ class NairobiPoliceGame:
             self.handle_location_event()
             self.handle_random_event()
             self.handle_player_action()
-            self.update_game_state()
+            self.update_game_state()  # This call was missing
             if self.check_game_over():
                 break
             self.current_day += 1
@@ -140,26 +141,30 @@ class NairobiPoliceGame:
             success = random.random() < 0.5
             if success:
                 self.print_success("Your quick action resolved the situation effectively.")
-                self.update_score(15)
+                self.update_score(15, "Quick action resolved the situation")
+                self.adjust_resources_based_on_action(success=True, resource="morale")
             else:
                 self.print_failure("Your hasty decision led to complications.")
-                self.update_score(-10)
+                self.update_score(-10, "Hasty decision led to complications")
+                self.adjust_resources_based_on_action(success=False, resource="morale")
         elif choice == "2":
             self.print_success("You gained valuable insights by gathering more information.")
-            self.update_score(5)
-            self.game_state.resources["public_support"] += 3
+            self.update_score(10, "Gained valuable insights")
+            self.adjust_resources_based_on_action(success=True, resource="public_support")
         elif choice == "3":
             success = random.random() < 0.7
             if success:
                 self.print_success("The specialized team handled the situation well.")
-                self.update_score(10)
+                self.update_score(12, "Specialized team handled the situation well")
+                self.adjust_resources_based_on_action(success=True, resource="equipment")
             else:
                 self.print_failure("The team struggled to manage the situation effectively.")
-                self.update_score(-5)
+                self.update_score(-8, "Team struggled to manage the situation")
+                self.adjust_resources_based_on_action(success=False, resource="equipment")
         else:
             self.buzz_sound.play()  # Play buzzing sound for invalid choice
             self.print_failure("Invalid choice. Opportunity lost.")
-            self.update_score(-5)
+            self.update_score(-5, "Invalid choice made, opportunity lost")
 
     def handle_random_event(self):
         events = [
@@ -176,21 +181,21 @@ class NairobiPoliceGame:
         success = random.random() < 0.6
         if success:
             self.print_success("The protest remained peaceful, thanks to your effective crowd control.")
-            self.update_score(10)
+            self.update_score(20, "Managed peaceful protest effectively")
         else:
             self.print_failure("The protest turned violent despite your efforts.")
-            self.update_score(-15)
+            self.update_score(-15, "Protest turned violent despite efforts")
 
     def media_scrutiny_event(self):
         print(f"\n{Colors.OKCYAN}The media is scrutinizing police actions.{Colors.RESET}")
         success = random.random() < 0.7
         if success:
             self.print_success("The media reports were favorable, boosting public support.")
-            self.update_score(10)
+            self.update_score(15, "Favorable media reports boosted public support")
             self.game_state.resources["public_support"] += 5
         else:
             self.print_failure("The media portrayed the police negatively, causing public backlash.")
-            self.update_score(-10)
+            self.update_score(-10, "Negative media portrayal caused public backlash")
             self.game_state.resources["public_support"] -= 5
 
     def natural_disaster_event(self):
@@ -198,25 +203,25 @@ class NairobiPoliceGame:
         success = random.random() < 0.5
         if success:
             self.print_success("Your team effectively managed the disaster, earning public praise.")
-            self.update_score(20)
+            self.update_score(20, "Effectively managed natural disaster")
         else:
             self.print_failure("The disaster response was inadequate, causing further chaos.")
-            self.update_score(-20)
+            self.update_score(-20, "Inadequate response to natural disaster")
 
     def political_interference_event(self):
         print(f"\n{Colors.FAIL}There is political interference affecting police operations.{Colors.RESET}")
         success = random.random() < 0.6
         if success:
             self.print_success("You successfully navigated the political challenges.")
-            self.update_score(15)
+            self.update_score(15, "Successfully navigated political challenges")
         else:
             self.print_failure("Political interference hampered your efforts, leading to setbacks.")
-            self.update_score(-15)
+            self.update_score(-15, "Political interference hampered efforts")
 
     def resource_shortage_event(self):
         print(f"\n{Colors.WARNING}A shortage of resources is limiting police effectiveness.{Colors.RESET}")
         self.print_failure("You need to allocate your resources wisely to overcome this challenge.")
-        self.update_score(-10)
+        self.update_score(-10, "Resource shortage limited effectiveness")
         self.game_state.resources["equipment"] -= 10
 
     def handle_player_action(self):
@@ -231,61 +236,94 @@ class NairobiPoliceGame:
             success = random.random() < 0.7
             if success:
                 self.print_success("Your speech calmed the crowd, reducing tension.")
-                self.update_score(10)
+                self.update_score(10, "Calmed the crowd with a speech")
                 self.game_state.resources["public_support"] += 5
             else:
                 self.print_failure("The crowd reacted negatively to your speech.")
-                self.update_score(-10)
+                self.update_score(-10, "Speech caused negative reaction")
         elif choice == "2":
             success = random.random() < 0.5
             if success:
                 self.print_success("The visible police presence deterred potential violence.")
-                self.update_score(10)
+                self.update_score(10, "Police presence deterred violence")
                 self.game_state.resources["personnel"] -= 5
             else:
                 self.print_failure("The presence escalated tensions.")
-                self.update_score(-10)
+                self.update_score(-10, "Presence escalated tensions")
         elif choice == "3":
             success = random.random() < 0.8
             if success:
                 self.print_success("Dialogue with leaders was successful in easing tensions.")
-                self.update_score(15)
+                self.update_score(15, "Dialogue with leaders eased tensions")
             else:
                 self.print_failure("The dialogue failed to achieve its goals.")
-                self.update_score(-5)
+                self.update_score(-5, "Dialogue failed to achieve goals")
         elif choice == "4":
             success = random.random() < 0.4
             if success:
                 self.print_success("Allowing the protests to proceed peacefully was a wise decision.")
-                self.update_score(5)
+                self.update_score(5, "Protests allowed peacefully")
             else:
                 self.print_failure("The lack of intervention led to unrest.")
-                self.update_score(-15)
+                self.update_score(-15, "Lack of intervention led to unrest")
         else:
             self.buzz_sound.play()  # Play buzzing sound for invalid choice
             self.print_failure("Invalid choice. No action taken.")
-            self.update_score(-5)
+            self.update_score(-5, "No action taken due to invalid choice")
 
     def update_game_state(self):
         self.update_resources()
 
     def update_resources(self):
+        # Adjust resources randomly for the sake of the game dynamics
         self.game_state.resources["personnel"] += random.randint(-5, 5)
         self.game_state.resources["equipment"] += random.randint(-5, 5)
         self.game_state.resources["public_support"] += random.randint(-5, 5)
         self.game_state.resources["morale"] += random.randint(-5, 5)
 
+        # Ensure resources are within bounds (0-100)
         for key in self.game_state.resources:
             self.game_state.resources[key] = max(0, min(self.game_state.resources[key], 100))
 
-    def print_success(self, message):
-        print(f"{Colors.OKGREEN}{message}{Colors.RESET}")
+        # Evaluate resource impact on score
+        self.evaluate_resource_impact()
 
-    def print_failure(self, message):
-        print(f"{Colors.FAIL}{message}{Colors.RESET}")
+    def evaluate_resource_impact(self):
+        # Points for maintaining high resources
+        if self.game_state.resources["personnel"] > 80:
+            self.update_score(10, "High personnel level")
+        elif self.game_state.resources["personnel"] < 20:
+            self.update_score(-10, "Low personnel level")
 
-    def update_score(self, points):
+        if self.game_state.resources["equipment"] > 80:
+            self.update_score(10, "High equipment level")
+        elif self.game_state.resources["equipment"] < 20:
+            self.update_score(-10, "Low equipment level")
+
+        if self.game_state.resources["public_support"] > 80:
+            self.update_score(15, "High public support")
+        elif self.game_state.resources["public_support"] < 20:
+            self.update_score(-15, "Low public support")
+
+        if self.game_state.resources["morale"] > 80:
+            self.update_score(15, "High morale")
+        elif self.game_state.resources["morale"] < 20:
+            self.update_score(-15, "Low morale")
+
+    def update_score(self, points, reason):
         self.game_state.score += points
+        self.summary_log.append(f"{reason}: {points} points")
+
+    def adjust_resources_based_on_action(self, success, resource):
+        """
+        Adjusts resources based on the outcome of an action.
+        - `success` is a boolean indicating if the action was successful.
+        - `resource` is the resource type affected by the action.
+        """
+        if success:
+            self.game_state.resources[resource] = min(100, self.game_state.resources[resource] + 10)
+        else:
+            self.game_state.resources[resource] = max(0, self.game_state.resources[resource] - 10)
 
     def check_game_over(self):
         if self.game_state.resources["personnel"] <= 0:
@@ -311,6 +349,7 @@ class NairobiPoliceGame:
         else:
             print(f"The current high score is: {self.high_score}")
         self.save_progress()
+        self.display_summary()
 
     def save_progress(self):
         self.save_high_score()
@@ -321,3 +360,15 @@ class NairobiPoliceGame:
         }
         with open("db.json", "w") as f:
             json.dump(data, f)
+
+    def display_summary(self):
+        print(f"\n{Colors.BOLD}Game Summary:{Colors.RESET}")
+        for log_entry in self.summary_log:
+            print(log_entry)
+        print(f"\n{Colors.BOLD}Final Score: {self.game_state.score}{Colors.RESET}")
+
+    def print_success(self, message):
+        print(f"{Colors.OKGREEN}{message}{Colors.RESET}")
+
+    def print_failure(self, message):
+        print(f"{Colors.FAIL}{message}{Colors.RESET}")
