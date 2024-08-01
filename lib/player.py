@@ -1,20 +1,15 @@
 class Player:
-    def _init_(self, background):
+    def __init__(self, background):
         self.background = background
-        self.strengths = []
-        self.weaknesses = []
-        self.set_traits()
-    def set_traits(self):
-        if self.background == "Veteran Officer":
-            self.strengths = ["Leadership", "Experience"]   
-            self.weaknesses = ["Rigid Thinking", "Health Issues"]
-        elif self.background == "Rookie Officer":
-            self.strengths = ["Energy", "Adaptability"]
-            self.weaknesses = ["Inexperience", "Impulsiveness"] 
-        elif self.background == "Community Liaison":
-            self.strengths = ["Communication", "Empathy"]
-            self.weaknesses = ["Lack of Authority", "Overly Trusting"]
-        elif self.background == "Tactical Expert":
-            self.strengths = ["Strategic Planning", "Physical Fitness"]
-            self.weaknesses = ["Overconfidence", "Narrow Focus"]
-
+        if background == "Veteran Officer":
+            self.strengths = ["Experienced", "High morale boost", "Better negotiation"]
+            self.weaknesses = ["Old-fashioned thinking", "Slower physical abilities"]
+        elif background == "Rookie Officer":
+            self.strengths = ["High energy", "Quick to respond", "Innovative thinking"]
+            self.weaknesses = ["Lack of experience", "Lower trust from senior officers"]
+        elif background == "Community Liaison":
+            self.strengths = ["High trust from citizens", "Good communication skills"]
+            self.weaknesses = ["Limited combat training", "Viewed as too lenient"]
+        else:
+            self.strengths = ["Strategic thinking", "Excellent in crisis management"]
+            self.weaknesses = ["Poor interpersonal skills", "Sometimes too aggressive"]
