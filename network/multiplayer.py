@@ -3,14 +3,14 @@ import threading
 from game.nairobi_police_game import NairobiPoliceGame
 
 class MultiplayerManager:
-    def __init__(self, game):
+    def __init__(self, game, player_name):
         self.game = game
+        self.player_name = player_name  # Store the player's name
         self.server = None
         self.client = None
-        self.player_name = None
 
     def host_game(self):
-        self.player_name = input("Enter your name: ")
+        print(f"{self.player_name} is hosting the game.")
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(("0.0.0.0", 9999))
         self.server.listen(1)
@@ -22,7 +22,7 @@ class MultiplayerManager:
         self.start_multiplayer_game()
 
     def join_game(self):
-        self.player_name = input("Enter your name: ")
+        print(f"{self.player_name} is joining a game.")
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect(("localhost", 9999))
         opponent_name = self.client.recv(1024).decode()

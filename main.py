@@ -6,8 +6,8 @@ if __name__ == "__main__":
     print("Do you want to play multiplayer? (y/n)")
     choice = game.get_player_input("Enter your choice: ").lower()
     if choice == 'y':
-        multiplayer = MultiplayerManager(game)
         player_name = game.get_player_input("Enter your name: ")
+        multiplayer = MultiplayerManager(game, player_name)  # Pass player_name to MultiplayerManager
         print("Do you want to (1) host or (2) join a game?")
         host_or_join = game.get_player_input("Enter your choice (1/2): ")
         if host_or_join == '1':
